@@ -1,0 +1,151 @@
+# prompt: A project should be developed with Python language and SQL/MySQL connectivity. *** The project should be Python coding for solving any problem such as Library Management system or Reservation System or School Management System or Employee Management system or Billing System or finding GST or QUIZ related or games related program and The Project should contain the features or functions such as : ➢ Add Records ➢ Delete Records ➢ Edit/Modify Records ➢ Search Records ➢ Update Records ➢ Display Records
+
+import mysql.connector
+import os
+
+# Create a connection to the database
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="",
+  database="library"
+)
+
+# Create a cursor to execute queries
+mycursor = mydb.cursor()
+
+# Add a record to the database
+def add_record():
+  # Get the record details from the user
+  book_id = input("Enter the book ID: ")
+  book_title = input("Enter the book title: ")
+  author = input("Enter the author's name: ")
+  publisher = input("Enter the publisher's name: ")
+  year_published = input("Enter the year published: ")
+
+  # Insert the record into the database
+  sql = "INSERT INTO books (book_id, book_title, author, publisher, year_published) VALUES (%s, %s, %s, %s, %s)"
+  values = (book_id, book_title, author, publisher, year_published)
+  mycursor.execute(sql, values)
+
+  # Commit the changes to the database
+  mydb.commit()
+
+# Delete a record from the database
+def delete_record():
+  # Get the book ID of the record to delete
+  book_id = input("Enter the book ID of the record to delete: ")
+
+  # Delete the record from the database
+  sql = "DELETE FROM books WHERE book_id = %s"
+  value = (book_id,)
+  mycursor.execute(sql, value)
+
+  # Commit the changes to the database
+  mydb.commit()
+
+# Edit/Modify a record in the database
+def edit_record():
+  # Get the book ID of the record to edit
+  book_id = input("Enter the book ID of the record to edit: ")
+
+  # Get the new details for the record
+  book_title = input("Enter the new book title: ")
+  author = input("Enter the new author's name: ")
+  publisher = input("Enter the new publisher's name: ")
+  year_published = input("Enter the new year published: ")
+
+  # Update the record in the database
+  sql = "UPDATE books SET book_title = %s, author = %s, publisher = %s, year_published = %s WHERE book_id = %s"
+  values = (book_title, author, publisher, year_published, book_id)
+  mycursor.execute(sql, values)
+
+  # Commit the changes to the database
+  mydb.commit()
+
+# Search for a record in the database
+def search_record():
+  # Get the search criteria from the user
+  search_term = input("Enter the search term: ")
+
+  # Search for the record in the database
+  sql = "SELECT * FROM books WHERE book_title LIKE %s OR author LIKE %s OR publisher LIKE %s OR year_published LIKE %s"
+  value = ("%" + search_term + "%", "%" + search_term + "%", "%" + search_term + "%", "%" + search_term + "%")
+  mycursor.execute(sql, value)
+
+  # Get the results of the search
+  results = mycursor.fetchall()
+
+  # Display the results of the search
+  for result in results:
+    print(result)
+
+# Update a record in the database
+def update_record():
+  # Get the book ID of the record to update
+  book_id = input("Enter the book ID of the record to update: ")
+
+  # Get the new details for the record
+  book_title = input("Enter the new book title: ")
+  author = input("Enter the new author's name: ")
+  publisher = input("Enter the new publisher's name: ")
+  year_published = input("Enter the new year published: ")
+
+  # Update the record in the database
+  sql = "UPDATE books SET book_title = %s, author = %s, publisher = %s, year_published = %s WHERE book_id = %s"
+  values = (book_title, author, publisher, year_published, book_id)
+  mycursor.execute(sql, values)
+
+  # Commit the changes to the database
+  mydb.commit()
+
+# Display all records in the database
+def display_records():
+  # Get all records from the database
+  sql = "SELECT * FROM books"
+  mycursor.execute(sql)
+
+  # Get the results of the query
+  results = mycursor.fetchall()
+
+  # Display the results of the query
+  for result in results:
+    print(result)
+
+# Main menu
+def main_menu():
+  # Display the main menu options
+  print("Welcome to the Library Management System")
+  print("-------------------------------------")
+  print("1. Add a record")
+  print("2. Delete a record")
+  print("3. Edit/Modify a record")
+  print("4. Search for a record")
+  print("5. Update a record")
+  print("6. Display all records")
+  print("7. Exit")
+
+  # Get the user's choice
+  choice = input("Enter your choice: ")
+
+  # Call the appropriate function based on the user's choice
+  if choice == "1":
+    add_record()
+  elif choice == "2":
+    delete_record()
+  elif choice == "3":
+    edit_record()
+  elif choice == "4":
+    search_record()
+  elif choice == "5":
+    update_record()
+  elif choice == "6":
+    display_records()
+  elif choice == "7":
+    exit()
+  else:
+    print("Invalid choice")
+
+# Keep looping until the user chooses to exit
+while True:
+  main_menu()
